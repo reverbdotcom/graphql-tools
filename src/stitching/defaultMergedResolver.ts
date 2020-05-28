@@ -15,7 +15,7 @@ const defaultMergedResolver: GraphQLFieldResolver<any, any> = (parent, args, con
   const errorResult = getErrorsFromParent(parent, responseKey);
 
   if (errorResult.kind === 'OWN') {
-    const originalError = errorResult.error;
+    const originalError = (errorResult.error.originalError || errorResult.error);
     throw new GraphQLError(
       originalError.message,
       info.fieldNodes,
@@ -40,6 +40,7 @@ const defaultMergedResolver: GraphQLFieldResolver<any, any> = (parent, args, con
   if (errorResult.errors) {
     result = annotateWithChildrenErrors(result, errorResult.errors);
   }
+
   return result;
 };
 
